@@ -4,9 +4,10 @@
         <span class="material-icons">
             person
         </span>
-        <label>
-            {{ comment?.author }}
+        <label v-if="!isEdit" class="format-text">
+            {{ authorField }}
         </label>
+        <input type="text" v-model="authorField" v-else-if="isEdit" class="author-field">
 
         <div class="actions">
             <button class="btn" @click="treatEdit" v-if="!isEdit">
@@ -27,9 +28,10 @@
         </div>
     </div>
     <div class="line"></div>
-    <div class="content">
-        {{ comment?.text }}
+    <div class="content" v-if="!isEdit" clas="format-text-1">
+        {{ textField }}
     </div>
+    <textarea type="text" v-model="textField" v-else-if="isEdit" class="text-field"></textarea>
     <div class="line"></div>
     <div class="footer">
         <small>
@@ -65,7 +67,9 @@ export default {
     },
     data() {
         return {
-            isEdit: false
+            isEdit: false,
+            textField: this.comment.text,
+            authorField: this.comment.author
         }
     }
 }
@@ -132,7 +136,21 @@ export default {
     }
 
     .content {
-        min-height: 48px;
+        min-height: 64px;
+        max-height: 64px;
+    }
+
+    .author-field {
+        height: 20px;
+        width: calc(100% - 128px);
+        margin-left: 8px;
+    }
+
+    .text-field {
+        max-width: 100%;
+        margin: 0px;
+        min-height: 64px;
+        max-height: 64px;
     }
 
     .footer {
@@ -145,4 +163,14 @@ export default {
         font-size: .8rem;
     }
 
+    .format-text {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .format-text-1 {
+        overflow: auto;
+        overflow-wrap: break-word;
+    }
 </style>
