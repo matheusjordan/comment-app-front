@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 const url = 'http://localhost:1337/comments/';
 
 const getAll = async () => {
@@ -8,9 +9,8 @@ const getAll = async () => {
         const response = await axios.get(url);
         comments = response.data;
     } catch {
-        console.log('deu pau');
+        return false;
     }
-
     return comments;
 }
 
@@ -21,7 +21,7 @@ const update = async (comment) => {
         const response = await axios.put(url, comment);
         updated = response.data;       
     } catch {
-        console.log('deu pau');
+        return false;
     }
     return updated; 
 }
@@ -33,7 +33,7 @@ const remove = async (id) => {
         await axios.delete(url + `${id}`);
         success = true; 
     } catch {
-        console.log('deu pau');
+        return success;
     }
 
     return success;
@@ -46,7 +46,7 @@ const create = async (comment) => {
         const response = await axios.post(url, comment);
         created = response.data;
     } catch {
-        console.log('deu pau');
+        return false;
     }
 
     return created;
