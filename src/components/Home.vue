@@ -8,7 +8,7 @@
         </div>
     </nav>
     <div class="content">
-        <Card :comment="comment" v-for="comment of comments" :key="comment.id"/>
+        <Card :comment="comment" v-for="comment of comments" :key="comment.id" @refresh="getComments"/>
         <div v-if="showModal">
             <Modal @close="create"/>
         </div>
@@ -26,20 +26,21 @@
 import Card from './Card';
 import Modal from './Modal';
 
+import { getAll } from '../services/comments.service';
+
 export default {
+    created() {
+        setInterval(() => {
+            this.getComments();
+        }, 5000);
+    },
     components: {
         Card,
         Modal
     },
     data() {
         return {
-            comments: [
-                { id: 1, text: 'comentario de teste 1', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-            ],
+            comments: [],
             showModal: false
         }
     },
@@ -47,10 +48,16 @@ export default {
         openModal: function() {
             this.showModal = !this.showModal;
         },
-        create: function($event) {
-            console.log($event);
-            this.openModal();
-        }
+        create: function() {
+            this.showModal = false;
+            this.getComments();
+        },
+        getComments: function() {
+            getAll()
+                .then((data) => {
+                    this.comments = data;
+                })
+        },
     }
 }
 </script>

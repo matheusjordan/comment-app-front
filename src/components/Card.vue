@@ -35,13 +35,15 @@
     <div class="line"></div>
     <div class="footer">
         <small>
-            {{ transformDate(new Date()) }}
+            {{ transformDate(comment.createdAt) }}
         </small>
     </div>
   </div>
 </template>
 
 <script>
+import { update, remove } from '../services/comments.service';
+
 export default {
     props: {
         comment: Object,
@@ -51,11 +53,26 @@ export default {
             this.isEdit = !this.isEdit;
         },
         saveEdit: function() {
-            this.isEdit = false;
-            console.log('salvo')
+            const comment = this.transformComment();
+            
+            update(comment)
+                .then(() => {
+                    this.isEdit = false;
+                    this.$emit('refresh', null);
+                });
         },
         deleteComment: function() {
-            console.log('deletado')
+            const id = this.comment.id;
+
+            remove(id)
+                .then((data) => {
+                    if (data) {
+                        console.log('removido!')
+                        this.$emit('refresh', null);
+                    } else {
+                        console.log('falha ao remover!')
+                    }
+                })
         },
 
         transformDate: function(value) {
@@ -63,6 +80,10 @@ export default {
             const formatedDate = `${date.getMinutes()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
 
             return formatedDate;
+        },
+        transformComment: function () {
+            const comment = { id: this.comment.id, text: this.textField, author: this.authorField }
+            return comment;
         }
     },
     data() {

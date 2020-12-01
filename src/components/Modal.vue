@@ -42,10 +42,9 @@
 </template>
 
 <script>
-export default {
-    props: {
+import { create } from '../services/comments.service';
 
-    },
+export default {
     data() {
         return {
             authorField: '',
@@ -54,11 +53,18 @@ export default {
     },
     methods: {
         save: function() {
-            this.$emit('close', { author: this.authorField, comment: this.commentField})
+            create({ author: this.authorField, text: this.commentField })
+                .then(() => {
+                    this.$emit('close', true)
+                    console.log('deu tudo certo')
+                })
+                .catch(() => {
+                    console.log('deu tudo errado')
+                });
         },
         close: function() {
             this.$emit('close', null)
-        }
+        },
     } 
 }
 </script>
