@@ -31,7 +31,7 @@
     <div class="content" v-if="!isEdit" clas="format-text-1">
         {{ textField }}
     </div>
-    <textarea type="text" v-model="textField" v-else-if="isEdit" class="text-field"></textarea>
+    <textarea v-model="textField" v-else-if="isEdit" class="text-field"></textarea>
     <div class="line"></div>
     <div class="footer">
         <small>
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { successToast, errorToast } from '../services/toast.service';
 import { update, remove } from '../services/comments.service';
 
 export default {
@@ -56,9 +57,14 @@ export default {
             const comment = this.transformComment();
             
             update(comment)
-                .then(() => {
-                    this.isEdit = false;
-                    this.$emit('refresh', null);
+                .then((data) => {
+                    if (data) {
+                        this.isEdit = false;
+                        successToast(this, 'Comentário editado com sucesso!');
+                        this.$emit('refresh', null);
+                    } else {
+                        errorToast(this, 'Falha ao editar comentário!')
+                    }
                 });
         },
         deleteComment: function() {
@@ -67,10 +73,10 @@ export default {
             remove(id)
                 .then((data) => {
                     if (data) {
-                        console.log('removido!')
+                        successToast(this, 'Comentário removido com sucesso!');
                         this.$emit('refresh', null);
                     } else {
-                        console.log('falha ao remover!')
+                        errorToast(this, 'Falha ao remover comentário');
                     }
                 })
         },
@@ -112,6 +118,7 @@ export default {
         flex-flow: column;
         max-width: 256px;
         min-width: 256px;
+        max-height: 140px;
         border-radius: 32px;
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     }

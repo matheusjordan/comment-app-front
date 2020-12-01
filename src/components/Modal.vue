@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { errorToast, successToast } from '../services/toast.service';
 import { create } from '../services/comments.service';
 
 export default {
@@ -54,13 +55,14 @@ export default {
     methods: {
         save: function() {
             create({ author: this.authorField, text: this.commentField })
-                .then(() => {
-                    this.$emit('close', true)
-                    console.log('deu tudo certo')
+                .then((data) => {
+                    if (data) {
+                        this.$emit('close', true)
+                        successToast(this, 'Comentário criado com sucesso!')
+                    } else {
+                        errorToast(this, 'Falha ao criar comentário!');
+                    }
                 })
-                .catch(() => {
-                    console.log('deu tudo errado')
-                });
         },
         close: function() {
             this.$emit('close', null)

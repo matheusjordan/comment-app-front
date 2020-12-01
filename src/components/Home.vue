@@ -26,6 +26,7 @@
 import Card from './Card';
 import Modal from './Modal';
 
+import { errorToast } from '../services/toast.service';
 import { getAll } from '../services/comments.service';
 
 export default {
@@ -55,7 +56,11 @@ export default {
         getComments: function() {
             getAll()
                 .then((data) => {
-                    this.comments = data;
+                    if (data) {
+                        this.comments = data;
+                    } else {
+                        errorToast(this, 'Falha ao obter comentários!');
+                    }
                 })
         },
     }
@@ -75,6 +80,7 @@ export default {
 
     .content {
         margin: 16px;
+        height: calc(100vh - 62px);
         display: flex;
         justify-content: space-evenly;
         flex-wrap: wrap;
@@ -86,6 +92,9 @@ export default {
         padding: 16px;
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
         background: #dcedc8;
+        position: sticky;
+        top: 0px;
+        z-index: 99;
     }
 
     .actions {
