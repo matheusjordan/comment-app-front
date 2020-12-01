@@ -168,6 +168,7 @@ export default {
        display: flex;
        flex-direction: row;
        margin-left: 8px;
+       padding-top: 10px;
    } 
 
    .modal-header > .icon {

@@ -8,7 +8,15 @@
         </div>
     </nav>
     <div class="content">
-        <Card :comment="comment" v-for="comment of comments" :key="comment.id" @refresh="getComments"/>
+        <div v-if="comments.length > 0">
+            <Card :comment="comment" v-for="comment of comments" :key="comment.id" @refresh="getComments"/>
+        </div>
+        <div class="spinner-container" v-if="comments.length === 0">
+            <div class="spinner-text">
+                {{ loadingText }}
+            </div>
+            <Spinner/>
+        </div>
         <div v-if="showModal">
             <Modal @close="create"/>
         </div>
@@ -25,6 +33,7 @@
 <script>
 import Card from './Card';
 import Modal from './Modal';
+import Spinner  from './Spinner';
 
 import { errorToast } from '../services/toast.service';
 import { getAll } from '../services/comments.service';
@@ -37,12 +46,14 @@ export default {
     },
     components: {
         Card,
-        Modal
+        Modal,
+        Spinner
     },
     data() {
         return {
             comments: [],
-            showModal: false
+            showModal: false,
+            loadingText: 'Carregando comentários...' 
         }
     },
     methods: {
@@ -58,6 +69,7 @@ export default {
                 .then((data) => {
                     if (data) {
                         this.comments = data;
+                        this.loadingText = 'Aguardando comentários...'
                     } else {
                         errorToast(this, 'Falha ao obter comentários!');
                     }
@@ -120,5 +132,14 @@ export default {
         font-size: 40px;
         padding: 4px;
         color: white;
+    }
+
+    .spinner-container {
+        margin-top: 80px;
+    }
+
+    .spinner-container > .spinner-text {
+        font-size: 1.2rem;
+        font-weight: 700;
     }
 </style>
