@@ -9,9 +9,12 @@
     </nav>
     <div class="content">
         <Card :comment="comment" v-for="comment of comments" :key="comment.id"/>
+        <div v-if="showModal">
+            <Modal @close="create"/>
+        </div>
     </div>
     <div class="actions">
-        <button aria-placeholder="Criar comentário">
+        <button aria-placeholder="Criar comentário" @click="openModal">
             <span class="material-icons">
                 add_circle_outline
             </span>
@@ -20,11 +23,13 @@
 </template>
 
 <script>
-import Card from './Card'
+import Card from './Card';
+import Modal from './Modal';
 
 export default {
     components: {
-        Card
+        Card,
+        Modal
     },
     data() {
         return {
@@ -34,20 +39,17 @@ export default {
                 { id: 2, text: 'comentario de teste 2', author: 'admin' },
                 { id: 2, text: 'comentario de teste 2', author: 'admin' },
                 { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-                { id: 2, text: 'comentario de teste 2', author: 'admin' },
-            ]
+            ],
+            showModal: false
+        }
+    },
+    methods: {
+        openModal: function() {
+            this.showModal = !this.showModal;
+        },
+        create: function($event) {
+            console.log($event);
+            this.openModal();
         }
     }
 }
