@@ -1,4 +1,7 @@
 # comments-front
+```
+Project made using VueJS as frontend framework
+```
 
 ## Project setup
 ```
